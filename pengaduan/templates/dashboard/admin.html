@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block content %}
+<h2>Dashboard Administrator</h2>
+<ul>
+    <li><a href="{% url 'verifikasi_pengaduan' %}">Verifikasi & Validasi Pengaduan</a></li>
+    <li><a href="{% url 'generate_laporan' %}">Generate Laporan</a></li>
+</ul>
+{% endblock %}

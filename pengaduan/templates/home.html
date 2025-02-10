@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<main class="container mx-auto mt-12">
+    {% if user.is_authenticated %}
+        {% if user.role|default:'' == "masyarakat" %}
+            <h2 class="text-2xl text-center font-bold">Selamat datang di Pengaduan Masyarakat, {{ user.username }}!</h2>
+            <p class="mt-2 text-center">Gunakan menu di atas untuk membuat pengaduan atau melihat laporan Anda.</p>
+        
+        {% elif user.role|default:'' == "petugas" %}
+            <h2 class="text-2xl text-center font-bold">Halo, Petugas {{ user.username }}!</h2>
+            <p class="mt-2 text-center">Anda dapat melihat dan memproses laporan yang telah diajukan masyarakat.</p>
+        
+        {% elif user.role|default:'' == "admin" %}
+            <h2 class="text-2xl text-center font-bold">Selamat datang, {{ user.username }}!</h2>
+            <p class="mt-2 text-center">Kelola pengguna, kategori, dan laporan yang masuk.</p>
+        {% endif %}
+    {% else %}
+        <h2 class="text-2xl font-bold text-center">Selamat datang di Pengaduan Masyarakat</h2>
+        <p class="text-center mt-2">Silakan login untuk mengakses fitur-fitur berikut.</p>
+    {% endif %}
+</main>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
+    <!-- Card 1: Buat Laporan (khusus masyarakat) -->
+    {% if user.is_authenticated and user.role == "masyarakat" %}
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-center mt-4">Buat Laporan</h2>
+        <p class="text-gray-600 text-center mt-2">Laporkan masalah yang Anda temui dengan mudah.</p>
+        <a href="{% url 'buat_pengaduan' %}" class="block bg-blue-500 text-white mt-4 py-2 px-4 rounded text-center">Laporkan</a>
+    </div>    
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold text-center mt-4">Cek Status</h2>
+            <p class="text-gray-600 text-center mt-2">Lihat perkembangan laporan yang telah dibuat atau diproses.</p>
+            <a href="" class="block bg-green-500 text-white mt-4 py-2 px-4 rounded text-center">Cek Status</a>
+        </div>
+    {% endif %}
+
+    <!-- Card 2: Cek Status (khusus masyarakat & petugas) -->
+    {% if user.is_authenticated and  user.role == "petugas" %}
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold text-center mt-4">Cek Status</h2>
+            <p class="text-gray-600 text-center mt-2">Lihat perkembangan laporan yang telah dibuat atau diproses.</p>
+            <a href="{% url 'status' %}" class="block bg-green-500 text-white mt-4 py-2 px-4 rounded text-center">Cek Status</a>
+        </div>
+    {% endif %}
+
+    <!-- Card 3: Bantuan (semua user) -->
+    {% comment %} <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-center mt-4">Buat Laporan</h2>
+        <p class="text-gray-600 text-center mt-2">Laporkan masalah yang Anda temui dengan mudah.</p>
+        <a href="" class="block bg-blue-500 text-white mt-4 py-2 px-4 rounded text-center">Laporkan</a>
+    </div>    
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-xl font-bold text-center mt-4">Cek Status</h2>
+            <p class="text-gray-600 text-center mt-2">Lihat perkembangan laporan yang telah dibuat atau diproses.</p>
+            <a href="" class="block bg-green-500 text-white mt-4 py-2 px-4 rounded text-center">Cek Status</a>
+        </div>
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-center mt-4">Bantuan</h2>
+        <p class="text-gray-600 text-center mt-2">Cari tahu cara menggunakan aplikasi ini.</p>
+        <a href="" class="block bg-yellow-500 text-white mt-4 py-2 px-4 rounded text-center">Bantuan</a>
+    </div> {% endcomment %}
+</div>
+{% endblock %}

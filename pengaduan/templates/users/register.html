@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<form method="POST" class="bg- p-8 rounded-2xl shadow-lg w-full max-w-md mx-auto border border-gray-700">
+    {% csrf_token %}
+    <h2 class="text-3xl font-bold text-white mb-6 text-center">Registrasi</h2>
+
+    <div class="mb-6">
+        <label for="nik" class="block text-gray-400 mb-2">Nik</label>
+        <input type="text" id="nik" name="nik" placeholder="Masukkan NIK"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-6">
+        <label for="nama" class="block text-gray-400 mb-2">Nama</label>
+        <input type="text" id="nama" name="nama" placeholder="Masukkan Nama"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-6">
+        <label for="username" class="block text-gray-400 mb-2">Username</label>
+        <input type="text" id="username" name="username" placeholder="Masukkan Username"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-6">
+        <label for="password1" class="block text-gray-400 mb-2">Password</label>
+        <input type="password" id="password1" name="password1" placeholder="Masukkan Password"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-6">
+        <label for="password2" class="block text-gray-400 mb-2">Konfirmasi Password</label>
+        <input type="password" id="password2" name="password2" placeholder="Ulangi Password"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-6">
+        <label for="telp" class="block text-gray-400 mb-2">Telp</label>
+        <input type="text" id="telp" name="telp" placeholder="Masukkan Nomor Telepon"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+    </div>
+
+    <div class="mb-6">
+        <label for="alamat" class="block text-gray-400 mb-2">Alamat</label>
+        <textarea id="alamat" name="alamat" placeholder="Masukkan Alamat" rows="3"
+            class="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
+    </div>
+
+    <button type="submit"
+        class="w-full bg-green-500 hover:bg-green-600 text-black font-semibold py-3 px-4 rounded-lg transition-all duration-300 ease-in-out">
+        Daftar
+    </button>
+
+    <p class="mt-6 text-gray-400 text-center">
+        Sudah punya akun? <a href="{% url 'login' %}" class="text-green-500 hover:underline">Login di sini</a>.
+    </p>
+</form>
+{% endblock %}

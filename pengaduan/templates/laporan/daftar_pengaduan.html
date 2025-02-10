@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Pengaduan{% endblock %}
+
+{% block content %}
+<h2>Daftar Pengaduan</h2>
+<table border="1">
+    <tr>
+        <th>Tanggal</th>
+        <th>Pelapor</th>
+        <th>Kategori</th>
+        <th>Isi Laporan</th>
+        <th>Status</th>
+        <th>Aksi</th>
+    </tr>
+    {% for pengaduan in pengaduan_list %}
+    <tr>
+        <td>{{ pengaduan.tgl_pengaduan }}</td>
+        <td>{{ pengaduan.user.username }}</td>
+        <td>{{ pengaduan.kategori.nama_kategori }}</td>
+        <td>{{ pengaduan.isi_laporan }}</td>
+        <td>{{ pengaduan.status }}</td>
+        <td>
+            {% if user.role == 'petugas' %}
+                <a href="{% url 'beri_tanggapan' pengaduan.id %}">Beri Tanggapan</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard Masyarakat{% endblock %}
+
+{% block content %}
+<h2>Dashboard Masyarakat</h2>
+<ul>
+    <li><a href="{% url 'buat_pengaduan' %}">Buat Pengaduan</a></li>
+    <li><a href="{% url 'daftar_pengaduan' %}">Lihat Pengaduan Saya</a></li>
+</ul>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-center text-gray-800">Buat Pengaduan</h1>
+    <p class="text-gray-600 text-center mt-2">Isi formulir di bawah untuk melaporkan masalah.</p>
+    
+    <form method="POST" action="{% url 'buat_pengaduan' %}" enctype="multipart/form-data" class="mt-6">
+        {% csrf_token %}
+        
+        <!-- Input Kategori -->
+        <div class="mb-4">
+            <label for="kategori" class="block text-gray-700 font-medium mb-2">Kategori</label>
+            <select name="kategori" id="kategori" required class="w-full border border-gray-300 p-2 rounded">
+                <option value="" disabled selected>Pilih Kategori</option>
+                <option value="Kebersihan">Kebersihan</option>
+                <option value="Keamanan">Keamanan</option>
+                <option value="Pelanggaran">Pelanggaran</option>
+                <option value="Fasilitas Umum">Fasilitas Umum</option>
+            </select>
+        </div>
+        
+        <!-- Input Lokasi -->
+        <div class="mb-4">
+            <label for="lokasi" class="block text-gray-700 font-medium mb-2">Lokasi</label>
+            <input type="text" name="lokasi" id="lokasi" placeholder="Masukkan lokasi kejadian" required class="w-full border border-gray-300 p-2 rounded">
+        </div>
+        
+        <!-- Input Isi Laporan -->
+        <div class="mb-4">
+            <label for="isi_laporan" class="block text-gray-700 font-medium mb-2">Isi Laporan</label>
+            <textarea name="isi_laporan" id="isi_laporan" rows="5" required class="w-full border border-gray-300 p-2 rounded"></textarea>
+        </div>
+        
+        <!-- Upload Foto -->
+        <div class="mb-4">
+            <label for="foto" class="block text-gray-700 font-medium mb-2">Upload Foto (Opsional)</label>
+            <input type="file" name="foto" id="foto" class="w-full border border-gray-300 p-2 rounded">
+        </div>
+        
+        <!-- Tombol Kirim -->
+        <div class="text-center">
+            <button type="submit" class="bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition">Kirim Laporan</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
