@@ -11,8 +11,6 @@ def home_view(request):
     }
     return render(request, 'home.html', context)  # Pastikan template home.html ada di folder yang sesuai
 
-
-
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get("username")

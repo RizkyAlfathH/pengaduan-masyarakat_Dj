@@ -18,3 +18,10 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+from .models import Pengaduan
+
+class PengaduanForm(forms.ModelForm):
+    class Meta:
+        model = Pengaduan
+        fields = ['lokasi', 'foto', 'isi_laporan', 'status']

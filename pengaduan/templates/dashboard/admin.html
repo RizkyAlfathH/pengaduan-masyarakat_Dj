@@ -1,11 +1,122 @@
-{% extends 'base.html' %}
-
-{% block title %}Dashboard Admin{% endblock %}
-
 {% block content %}
-<h2>Dashboard Administrator</h2>
+<h1>Dashboard Admin</h1>
+<p>Selamat datang, <strong>{{ user.nama_admin }}</strong>!</p>
+
+<!-- Statistik Laporan -->
+<h2>Statistik Laporan</h2>
 <ul>
-    <li><a href="{% url 'verifikasi_pengaduan' %}">Verifikasi & Validasi Pengaduan</a></li>
-    <li><a href="{% url 'generate_laporan' %}">Generate Laporan</a></li>
+    <li>Total Laporan: {{ pengaduan|length }}</li>
+    <li>
+        Menunggu Verifikasi: 
+        {% with count=0 %}
+            {% for item in pengaduan %}
+                {% if item.status == "tunggu" %}
+                    {% with count=count|add:"1" %}
+                    {% endwith %}
+                {% endif %}
+            {% endfor %}
+            {{ count }}
+        {% endwith %}
+    </li>
+    <li>
+        Dalam Proses: 
+        {% with count=0 %}
+            {% for item in pengaduan %}
+                {% if item.status == "proses" %}
+                    {% with count=count|add:"1" %}
+                    {% endwith %}
+                {% endif %}
+            {% endfor %}
+            {{ count }}
+        {% endwith %}
+    </li>
+    <li>
+        Selesai: 
+        {% with count=0 %}
+            {% for item in pengaduan %}
+                {% if item.status == "selesai" %}
+                    {% with count=count|add:"1" %}
+                    {% endwith %}
+                {% endif %}
+            {% endfor %}
+            {{ count }}
+        {% endwith %}
 </ul>
+
+<!-- Filter Laporan -->
+<h2>Filter Laporan</h2>
+<form method="GET" action="{% url 'admin_dashboard' %}">
+    <label for="filter_status">Status:</label>
+    <select name="filter_status" id="filter_status" onchange="this.form.submit()">
+        <option value="" {% if not request.GET.filter_status %}selected{% endif %}>Semua</option>
+        <option value="tunggu" {% if request.GET.filter_status == "tunggu" %}selected{% endif %}>Menunggu Verifikasi</option>
+        <option value="proses" {% if request.GET.filter_status == "proses" %}selected{% endif %}>Dalam Proses</option>
+        <option value="selesai" {% if request.GET.filter_status == "selesai" %}selected{% endif %}>Selesai</option>
+    </select>
+</form>
+
+<!-- Daftar Laporan -->
+<h2>Daftar Laporan Pengaduan</h2>
+<table border="1" width="100%">
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Tanggal</th>
+            <th>Pelapor</th>
+            <th>Isi Laporan</th>
+            <th>Lokasi</th>
+            <th>Kategori</th>
+            <th>Foto</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in pengaduan %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ data.tgl_pengaduan }}</td>
+            <td>{{ data.masyarakat.nama }}</td>
+            <td>{{ data.isi_laporan }}</td>
+            <td>{{ data.lokasi }}</td>
+            <td>{{ data.kategori }}</td>
+            <td>
+                {% if data.foto %}
+                    <img src="{{ data.foto.url }}" width="100">
+                {% else %}
+                    Tidak ada foto
+                {% endif %}
+            </td>
+            <td>
+                {% if data.status == "tunggu" %}
+                    <span style="color: red;">Menunggu Verifikasi</span>
+                {% elif data.status == "proses" %}
+                    <span style="color: orange;">Sedang Diproses</span>
+                {% else %}
+                    <span style="color: green;">Selesai</span>
+                {% endif %}
+            </td>
+            <td>
+                <!-- Form Update Status -->
+                <form method="POST" action="{% url 'admin_verifikasi_update' data.id_pengaduan %}">
+                    {% csrf_token %}
+                    <select name="status">
+                        <option value="tunggu" {% if data.status == "tunggu" %}selected{% endif %}>Menunggu</option>
+                        <option value="proses" {% if data.status == "proses" %}selected{% endif %}>Proses</option>
+                        <option value="selesai" {% if data.status == "selesai" %}selected{% endif %}>Selesai</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+
+                <!-- Tombol Tanggapan -->
+                <a href="{% url 'admin_tanggapan_show' data.id_pengaduan %}">Beri Tanggapan</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="9" style="text-align: center;">Tidak ada laporan</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

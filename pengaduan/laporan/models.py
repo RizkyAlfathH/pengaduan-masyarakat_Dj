@@ -24,6 +24,7 @@ class Pengaduan(models.Model):
         super().save(*args, **kwargs)
 
 
+
 class Tanggapan(models.Model):
     pengaduan = models.ForeignKey(Pengaduan, on_delete=models.CASCADE)
     petugas = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'role': 'petugas'})
@@ -49,3 +50,6 @@ class Kategori(models.Model):
 
     def __str__(self):
         return self.nama
+
+
+

@@ -5,7 +5,7 @@
 {% block content %}
 <main class="container mx-auto mt-12">
     {% if user.is_authenticated %}
-        {% if user.role|default:'' == "masyarakat" %}
+        {% if user.role|default_if_none:'' == "masyarakat" %}
             <h2 class="text-2xl text-center font-bold">Selamat datang di Pengaduan Masyarakat, {{ user.username }}!</h2>
             <p class="mt-2 text-center">Gunakan menu di atas untuk membuat pengaduan atau melihat laporan Anda.</p>
             
@@ -14,35 +14,46 @@
                     Ke Dashboard Masyarakat
                 </a>
             </div>
-        {% elif user.role|default:'' == "petugas" %}
+            
+            <!-- Galeri Foto -->
+            <section class="mt-12">
+                <h3 class="text-xl font-bold text-center mb-4">Galeri Kegiatan</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-200 rounded-lg overflow-hidden shadow">
+                        <img src="https://via.placeholder.com/400x300" alt="Foto 1" class="w-full h-48 object-cover">
+                        <p class="p-4 text-center">Kegiatan Sosialisasi</p>
+                    </div>
+                    <div class="bg-gray-200 rounded-lg overflow-hidden shadow">
+                        <img src="https://via.placeholder.com/400x300" alt="Foto 2" class="w-full h-48 object-cover">
+                        <p class="p-4 text-center">Pengaduan Masyarakat</p>
+                    </div>
+                    <div class="bg-gray-200 rounded-lg overflow-hidden shadow">
+                        <img src="https://via.placeholder.com/400x300" alt="Foto 3" class="w-full h-48 object-cover">
+                        <p class="p-4 text-center">Kegiatan Lainnya</p>
+                    </div>
+                </div>
+            </section>
+        {% elif user.role|default_if_none:'' == "petugas" %}
             <h2 class="text-2xl text-center font-bold">Halo, Petugas {{ user.username }}!</h2>
             <p class="mt-2 text-center">Anda dapat melihat dan memproses laporan yang telah diajukan masyarakat.</p>
-        {% elif user.role|default:'' == "admin" %}
-            <h2 class="text-2xl text-center font-bold">Selamat datang, {{ user.username }}!</h2>
-            <p class="mt-2 text-center">Kelola pengguna, kategori, dan laporan yang masuk.</p>
+            
+            <div class="mt-8 text-center">
+                <a href="{% url 'petugas_dashboard' %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    Ke Dashboard Petugas
+                </a>
+            </div>
+        {% elif user.role|default_if_none:'' == "admin" %}
+            {% include 'dashboard/admin.html' %}
         {% endif %}
     {% else %}
         <h2 class="text-2xl font-bold text-center">Selamat datang di Pengaduan Masyarakat</h2>
         <p class="text-center mt-2">Silakan login untuk mengakses fitur-fitur berikut.</p>
-    {% endif %}
-
-    <!-- Galeri Foto -->
-    <section class="mt-12">
-        <h3 class="text-xl font-bold text-center mb-4">Galeri Kegiatan</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gray-200 rounded-lg overflow-hidden shadow">
-                <img src="https://via.placeholder.com/400x300" alt="Foto 1" class="w-full h-48 object-cover">
-                <p class="p-4 text-center">Kegiatan Sosialisasi</p>
-            </div>
-            <div class="bg-gray-200 rounded-lg overflow-hidden shadow">
-                <img src="https://via.placeholder.com/400x300" alt="Foto 2" class="w-full h-48 object-cover">
-                <p class="p-4 text-center">Pengaduan Masyarakat</p>
-            </div>
-            <div class="bg-gray-200 rounded-lg overflow-hidden shadow">
-                <img src="https://via.placeholder.com/400x300" alt="Foto 3" class="w-full h-48 object-cover">
-                <p class="p-4 text-center">Kegiatan Lainnya</p>
-            </div>
+        
+        <div class="mt-8 text-center">
+            <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Login Sekarang
+            </a>
         </div>
-    </section>
+    {% endif %}
 </main>
 {% endblock %}

@@ -9,8 +9,15 @@ urlpatterns = [
     path('masyarakat/', views.masyarakat_dashboard, name='masyarakat_dashboard'),
     path('laporan/', views.daftar_pengaduan, name='daftar_pengaduan'),
     path('buat-pengaduan/', views.buat_pengaduan, name='buat_pengaduan'),
+    
+    # Login dan Register
+    path('login/', views.login_view, name='login'),
+    path('register/', views.register_view, name='register'),
+    
+    # Dashboard umum yang redirect sesuai role
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]
 
-# Tambahkan static URL handling jika dalam mode pengembangan
+# Handling untuk static files dalam mode pengembangan
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
