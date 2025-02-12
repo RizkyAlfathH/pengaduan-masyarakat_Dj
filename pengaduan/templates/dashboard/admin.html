@@ -1,19 +1,21 @@
 {% block content %}
 <h1>Dashboard Admin</h1>
-<p>Selamat datang, <strong>{{ user.nama_admin }}</strong>!</p>
+<p>Selamat datang, <strong>{{ user.username }}</strong>!</p>
+
+<a href="{% url 'user_list' %}">Manajemen Akun</a>
 
 <!-- Statistik Laporan -->
 <h2>Statistik Laporan</h2>
 <ul>
-    <li>Total Laporan: {{ total_laporan }}</li>
-    <li>Menunggu Verifikasi: {{ menunggu_verifikasi }}</li>
-    <li>Dalam Proses: {{ dalam_proses }}</li>
-    <li>Selesai: {{ selesai }}</li>
+    <li>Total Laporan: <strong>{{ total_laporan }}</strong></li>
+    <li>Menunggu Verifikasi: <strong>{{ menunggu_verifikasi }}</strong></li>
+    <li>Dalam Proses: <strong>{{ dalam_proses }}</strong></li>
+    <li>Selesai: <strong>{{ selesai }}</strong></li>
 </ul>
 
 <!-- Filter Laporan -->
-<form method="GET" action="{% url 'admin_dashboard' %}">
-    <label for="filter_status">Status:</label>
+<form method="GET" action="{% url 'admin_dashboard' %}" style="margin-bottom: 20px;">
+    <label for="filter_status">Filter Status:</label>
     <select name="filter_status" id="filter_status" onchange="this.form.submit()">
         <option value="" {% if not filter_status %}selected{% endif %}>Semua</option>
         <option value="tunggu" {% if filter_status == "tunggu" %}selected{% endif %}>Menunggu Verifikasi</option>
@@ -24,9 +26,9 @@
 
 <!-- Daftar Laporan -->
 <h2>Daftar Laporan Pengaduan</h2>
-<table border="1" width="100%">
+<table border="1" width="100%" cellpadding="10" cellspacing="0">
     <thead>
-        <tr>
+        <tr style="background-color: #f2f2f2;">
             <th>No</th>
             <th>Tanggal</th>
             <th>Pelapor</th>
@@ -42,41 +44,40 @@
         {% for data in pengaduan %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ data.tgl_pengaduan }}</td>
-            <td>{{ data.masyarakat.nama }}</td>
-            <td>{{ data.isi_laporan }}</td>
+            <td>{{ data.tgl_pengaduan|date:"d-m-Y H:i" }}</td>
+            <td>{{ data.user.username }}</td>
+            <td>{{ data.isi_laporan|truncatewords:10 }}</td>
             <td>{{ data.lokasi }}</td>
             <td>{{ data.kategori }}</td>
             <td>
                 {% if data.foto %}
-                    <img src="{{ data.foto.url }}" width="100">
+                    <img src="{{ data.foto.url }}" width="100" style="border-radius: 5px;">
                 {% else %}
-                    Tidak ada foto
+                    <span>Tidak ada foto</span>
                 {% endif %}
             </td>
             <td>
                 {% if data.status == 1 %}
-                    <span style="color: red;">Menunggu Verifikasi</span>
+                    <span style="color: red; font-weight: bold;">Menunggu Verifikasi</span>
                 {% elif data.status == 2 %}
-                    <span style="color: orange;">Sedang Diproses</span>
+                    <span style="color: orange; font-weight: bold;">Sedang Diproses</span>
                 {% elif data.status == 3 %}
-                    <span style="color: green;">Selesai</span>
+                    <span style="color: green; font-weight: bold;">Selesai</span>
                 {% endif %}
-            </td>            
+            </td>
             <td>
                 <!-- Form Update Status -->
-                <form method="POST" action="{% url 'admin_verifikasi_update' data.id_pengaduan %}">
+                <form method="POST" action="{% url 'admin_verifikasi_update' data.id %}" style="margin-bottom: 5px;">
                     {% csrf_token %}
                     <select name="status">
-                        <option value="tunggu" {% if data.status == "tunggu" %}selected{% endif %}>Menunggu</option>
-                        <option value="proses" {% if data.status == "proses" %}selected{% endif %}>Proses</option>
-                        <option value="selesai" {% if data.status == "selesai" %}selected{% endif %}>Selesai</option>
+                        <option value="1" {% if data.status == 1 %}selected{% endif %}>Menunggu</option>
+                        <option value="2" {% if data.status == 2 %}selected{% endif %}>Proses</option>
+                        <option value="3" {% if data.status == 3 %}selected{% endif %}>Selesai</option>
                     </select>
                     <button type="submit">Update</button>
                 </form>
-
                 <!-- Tombol Tanggapan -->
-                <a href="{% url 'admin_tanggapan_show' data.id_pengaduan %}">Beri Tanggapan</a>
+                <a href="{% url 'admin_tanggapan_show' data.id %}" style="color: #007bff; text-decoration: none;">Beri Tanggapan</a>
             </td>
         </tr>
         {% empty %}
@@ -86,4 +87,16 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- Pagination -->
+<div style="margin-top: 20px;">
+    <span>Halaman: </span>
+    {% for page in pengaduan.paginator.page_range %}
+        {% if page == pengaduan.number %}
+            <strong>{{ page }}</strong>
+        {% else %}
+            <a href="?page={{ page }}&filter_status={{ filter_status }}">{{ page }}</a>
+        {% endif %}
+    {% endfor %}
+</div>
 {% endblock %}

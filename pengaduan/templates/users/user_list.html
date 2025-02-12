@@ -1,0 +1,29 @@
+<h1>Manajemen Akun</h1>
+<a href="{% url 'user_create' %}">Tambah Akun</a>
+<table border="1" cellpadding="10">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.get_role_display }}</td>
+            <td>
+                <a href="{% url 'user_edit' user.id %}">Edit</a> |
+                <a href="{% url 'user_delete' user.id %}" onclick="return confirm('Yakin ingin menghapus akun ini?')">Hapus</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Tidak ada akun</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

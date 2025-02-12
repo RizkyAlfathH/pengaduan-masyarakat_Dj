@@ -5,6 +5,8 @@ from . import views
 
 urlpatterns = [
     path('admin/', views.admin_dashboard, name='admin_dashboard'),
+    path('tanggapan/<int:id>/', views.admin_tanggapan_show, name='admin_tanggapan_show'),
+    path('verifikasi/update/<int:id>/', views.admin_verifikasi_update, name='admin_verifikasi_update'),
     path('petugas/', views.petugas_dashboard, name='petugas_dashboard'),
     path('masyarakat/', views.masyarakat_dashboard, name='masyarakat_dashboard'),
     path('laporan/', views.daftar_pengaduan, name='daftar_pengaduan'),

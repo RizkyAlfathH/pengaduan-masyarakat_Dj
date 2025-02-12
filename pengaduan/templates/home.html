@@ -43,6 +43,7 @@
                 </a>
             </div>
         {% elif user.role|default_if_none:'' == "admin" %}
+        <h2 class="text-2xl text-center font-bold">Halo, Admin {{ user.username }}!</h2>
             {% include 'dashboard/admin.html' %}
         {% endif %}
     {% else %}

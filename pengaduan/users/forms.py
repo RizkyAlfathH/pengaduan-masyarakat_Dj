@@ -23,3 +23,14 @@ class RegisterForm(UserCreationForm):
             'alamat': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Masukkan Alamat'}),
         }
 
+# users/forms.py
+from django import forms
+from .models import CustomUser
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'role', 'password']
+        widgets = {
+            'password': forms.PasswordInput(),
+        }

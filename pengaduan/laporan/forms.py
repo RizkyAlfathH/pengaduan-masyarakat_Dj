@@ -5,7 +5,15 @@ from .models import Pengaduan, Tanggapan
 class PengaduanForm(forms.ModelForm):
     class Meta:
         model = Pengaduan
-        fields = ['isi_laporan', 'foto', 'lokasi']
+        fields = ['kategori', 'lokasi', 'isi_laporan', 'foto']
+
+def clean(self):
+    cleaned_data = super().clean()
+    if self.instance.pk:  # Cek apakah instance sudah ada di database
+        user = self.instance.user
+        if user and user.role != 'masyarakat':
+            raise forms.ValidationError("Hanya pengguna dengan role 'masyarakat' yang bisa membuat pengaduan.")
+    return cleaned_data
 
 class TanggapanForm(forms.ModelForm):
     class Meta:
@@ -18,10 +26,3 @@ class RegisterForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
-
-from .models import Pengaduan
-
-class PengaduanForm(forms.ModelForm):
-    class Meta:
-        model = Pengaduan
-        fields = ['lokasi', 'foto', 'isi_laporan', 'status']

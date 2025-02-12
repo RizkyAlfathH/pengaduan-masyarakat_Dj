@@ -8,28 +8,37 @@ class Pengaduan(models.Model):
         (3, 'Selesai'),
     ]
 
+    KATEGORI_CHOICES = [
+        ('Kebersihan', 'Kebersihan'),
+        ('Keamanan', 'Keamanan'),
+        ('Pelanggaran', 'Pelanggaran'),
+        ('Fasilitas Umum', 'Fasilitas Umum'),
+        ('Tidak Ditentukan', 'Tidak Ditentukan'),  # Tambahkan opsi default
+    ]
+
     user = models.ForeignKey(
         CustomUser, 
         on_delete=models.CASCADE, 
         limit_choices_to={'role': 'masyarakat'}
     )
     tgl_pengaduan = models.DateTimeField(auto_now_add=True)
+    kategori = models.CharField(
+        max_length=50, 
+        choices=KATEGORI_CHOICES, 
+        default='Tidak Ditentukan'
+    )
+    lokasi = models.CharField(max_length=255)
     isi_laporan = models.TextField()
     foto = models.ImageField(upload_to='bukti/', blank=True, null=True)
-    lokasi = models.TextField()
     status = models.PositiveSmallIntegerField(choices=STATUS_CHOICES, default=1)
 
     def __str__(self):
-        return f"{self.user.username} - {self.isi_laporan[:30]}..."
-
-    def save(self, *args, **kwargs):
-        if self.user.role != 'masyarakat':
-            raise ValueError("Hanya pengguna dengan role 'masyarakat' yang bisa membuat pengaduan.")
-        super().save(*args, **kwargs)
+        return f"{self.user.username} - {self.kategori} ({self.get_status_display()})"
 
     def get_status_display(self):
         """Method untuk mendapatkan status dalam bentuk string ('Tunggu', 'Proses', 'Selesai')"""
         return dict(self.STATUS_CHOICES).get(self.status, "Unknown")
+
 
 class Tanggapan(models.Model):
     pengaduan = models.ForeignKey(Pengaduan, on_delete=models.CASCADE)
@@ -44,6 +53,7 @@ class Tanggapan(models.Model):
     def __str__(self):
         return f"Tanggapan {self.id} untuk Pengaduan {self.pengaduan.id}"
 
+
 class Laporan(models.Model):
     pengaduan = models.ForeignKey(Pengaduan, on_delete=models.CASCADE)
     admin = models.ForeignKey(
@@ -56,6 +66,7 @@ class Laporan(models.Model):
 
     def __str__(self):
         return f"Laporan {self.id} oleh {self.admin.username}"
+
 
 class Kategori(models.Model):
     nama = models.CharField(max_length=255, unique=True)
