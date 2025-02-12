@@ -5,53 +5,20 @@
 <!-- Statistik Laporan -->
 <h2>Statistik Laporan</h2>
 <ul>
-    <li>Total Laporan: {{ pengaduan|length }}</li>
-    <li>
-        Menunggu Verifikasi: 
-        {% with count=0 %}
-            {% for item in pengaduan %}
-                {% if item.status == "tunggu" %}
-                    {% with count=count|add:"1" %}
-                    {% endwith %}
-                {% endif %}
-            {% endfor %}
-            {{ count }}
-        {% endwith %}
-    </li>
-    <li>
-        Dalam Proses: 
-        {% with count=0 %}
-            {% for item in pengaduan %}
-                {% if item.status == "proses" %}
-                    {% with count=count|add:"1" %}
-                    {% endwith %}
-                {% endif %}
-            {% endfor %}
-            {{ count }}
-        {% endwith %}
-    </li>
-    <li>
-        Selesai: 
-        {% with count=0 %}
-            {% for item in pengaduan %}
-                {% if item.status == "selesai" %}
-                    {% with count=count|add:"1" %}
-                    {% endwith %}
-                {% endif %}
-            {% endfor %}
-            {{ count }}
-        {% endwith %}
+    <li>Total Laporan: {{ total_laporan }}</li>
+    <li>Menunggu Verifikasi: {{ menunggu_verifikasi }}</li>
+    <li>Dalam Proses: {{ dalam_proses }}</li>
+    <li>Selesai: {{ selesai }}</li>
 </ul>
 
 <!-- Filter Laporan -->
-<h2>Filter Laporan</h2>
 <form method="GET" action="{% url 'admin_dashboard' %}">
     <label for="filter_status">Status:</label>
     <select name="filter_status" id="filter_status" onchange="this.form.submit()">
-        <option value="" {% if not request.GET.filter_status %}selected{% endif %}>Semua</option>
-        <option value="tunggu" {% if request.GET.filter_status == "tunggu" %}selected{% endif %}>Menunggu Verifikasi</option>
-        <option value="proses" {% if request.GET.filter_status == "proses" %}selected{% endif %}>Dalam Proses</option>
-        <option value="selesai" {% if request.GET.filter_status == "selesai" %}selected{% endif %}>Selesai</option>
+        <option value="" {% if not filter_status %}selected{% endif %}>Semua</option>
+        <option value="tunggu" {% if filter_status == "tunggu" %}selected{% endif %}>Menunggu Verifikasi</option>
+        <option value="proses" {% if filter_status == "proses" %}selected{% endif %}>Dalam Proses</option>
+        <option value="selesai" {% if filter_status == "selesai" %}selected{% endif %}>Selesai</option>
     </select>
 </form>
 
@@ -88,14 +55,14 @@
                 {% endif %}
             </td>
             <td>
-                {% if data.status == "tunggu" %}
+                {% if data.status == 1 %}
                     <span style="color: red;">Menunggu Verifikasi</span>
-                {% elif data.status == "proses" %}
+                {% elif data.status == 2 %}
                     <span style="color: orange;">Sedang Diproses</span>
-                {% else %}
+                {% elif data.status == 3 %}
                     <span style="color: green;">Selesai</span>
                 {% endif %}
-            </td>
+            </td>            
             <td>
                 <!-- Form Update Status -->
                 <form method="POST" action="{% url 'admin_verifikasi_update' data.id_pengaduan %}">
